@@ -6,8 +6,10 @@
 /*   By: busmanov <busmanov@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/25 13:53:19 by busmanov          #+#    #+#             */
-/*   Updated: 2022/09/25 13:53:23 by busmanov         ###   ########.fr       */
+/*   Updated: 2022/09/25 13:54:32 by busmanov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-hey there
+hey there // just a comment
+
+int hey_there()
