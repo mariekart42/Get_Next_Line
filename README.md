@@ -1,1 +1,1 @@
-# Get_Next_Line project
+# Get_Next_Line
