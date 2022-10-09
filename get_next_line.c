@@ -24,7 +24,7 @@ char	*get_read_line(char *buffer) //return the line being read
 	return(line);
 }
 
-char	ft_get_rest(char *buffer) //save all content that has not yet been read from fd
+char	*ft_get_rest(char *buffer) //save all content that has not yet been read from fd
 { 
 	int	x;
 	int	y;
