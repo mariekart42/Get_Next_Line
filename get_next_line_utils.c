@@ -10,7 +10,7 @@ size_t	ft_strlen(char *str)
 	return(x);
 }
 
-char	strchr(char *str, char c)
+char	*strchr(char *str, char c)
 {
 	int i;
 	
@@ -24,7 +24,7 @@ char	strchr(char *str, char c)
 	return(NULL);
 }
 
-char	ft_strjoin(char *str1, char *str2)
+char	*ft_strjoin(char *str1, char *str2)
 {
 	int i;
 	int x;
