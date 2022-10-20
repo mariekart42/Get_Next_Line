@@ -29,6 +29,9 @@ char	*ft_get_rest(char *buffer);
 // char	*ft_strchr(char *str, char c); // your function
 char	*ft_strchr(const char *str, int c); // maries better function
 char	*ft_strjoin(char const *s1, char const *s2);
-
-
+char	*create_last(char *buff, char *line);
+void	buff_after_line(char *buff);
+void	*ft_memmove(void *dest, const void *src, size_t n);
+void	*ft_calloc(size_t count, size_t size);
+void	ft_bzero(void *str, size_t n);
 #endif

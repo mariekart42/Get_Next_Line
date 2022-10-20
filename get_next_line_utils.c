@@ -1,5 +1,48 @@
 #include "get_next_line.h"
 
+/**
+ * @brief	function erases the data in the n bytes of the memory
+       		starting at the location pointed to by s, by writing zeros 
+			(bytes containing '\0') to that area.
+ * @param str space in memory that gets sized to null
+ * @param n lengh we want to str gets nulled
+ */
+void	ft_bzero(void *str, size_t n)
+{
+	char	*ptr;
+	size_t	i;
+
+	ptr = (char *) str;
+	i = 0;
+	while (i < n)
+	{
+		ptr[i] = '\0';
+		i++;
+	}
+}
+
+/**
+ * @brief	function allocates 'nitems' bytes of memory, each in size of 'size' 
+ 			(int, char etc)
+			different to malloc, sets all places to '\0'
+ * 
+ * @param count 
+ * @param size 
+ * @return void* returns pointer to allocated memory
+ */
+void	*ft_calloc(size_t count, size_t size)
+{
+	void	*output;
+
+	if (count >= 4294967295 || size >= 4294967295)
+		return (NULL);
+	output = malloc(count * size);
+	if (!output)
+		return (NULL);
+	ft_bzero(output, count * size);
+	return (output);
+}
+
 size_t	ft_strlen(char *str)
 {
 	size_t x;
@@ -95,6 +138,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		k++;
 	}
 	ptr[i] = '\0';
+	free((void*)s1);
 	return (ptr);
 }
 

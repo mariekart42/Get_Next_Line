@@ -9,10 +9,11 @@ char	*get_read_line(char *buffer) //return the line being read
 	i = 0;
 	if(!buffer)
 		return(NULL);
-	while(buffer[i] != '\0' && buffer[i] != '\n') // search for the \0 or \n
+	while(buffer[i+1] != '\0' && buffer[i+1] != '\n') // search for the \0 or \n
 		i++;
-	line = malloc(sizeof(char) * (i + 2)); //allocate enough memory in my new string
-	if(!line)
+	i--; // buffer[i+1] because you otherwise enter heap memory that your not allowed to access
+	line = ft_calloc(sizeof(char), (i + 2)); //allocate enough memory in my new string
+	if (!line)
 		return(NULL);
 	i = 0;
 	while(buffer[i] != '\0' && buffer[i] != '\n') // copy character by character from my source to new string
@@ -23,6 +24,7 @@ char	*get_read_line(char *buffer) //return the line being read
 	if(buffer[i] == '\n') // in case we copied until \n, we have to add it to the new string too
 		line[i++] = '\n';
 	line[i] = '\0';
+
 	return(line);
 }
 
@@ -39,10 +41,10 @@ char	*ft_get_rest(char *buffer) //save all content that has not yet been read fr
 		x++;
 	if(buffer[x] == '\0')
 	{
-		free(buffer);
+		// free(buffer);
 		return(0);
 	}
-	new_buffer = malloc(sizeof(char) *(ft_strlen(buffer) - x + 1));
+	new_buffer = ft_calloc(sizeof(char), (ft_strlen(buffer) - x + 1));
 	if (!new_buffer)
 		return (NULL);
 	x = x + 1;
@@ -53,6 +55,14 @@ char	*ft_get_rest(char *buffer) //save all content that has not yet been read fr
 	free(buffer);
 	return (new_buffer);
 }
+
+char	*create_last(char *buff, char *line)
+{
+	line = ft_strjoin(line, buff);
+	buff[0] = '\0';
+	return (line);
+}
+
 //locate the line that should be read in our fd
 char	*get_line(char **buffer, int fd)
 {
@@ -61,20 +71,24 @@ char	*get_line(char **buffer, int fd)
 
 	byte_count = 1; // setting it to 0 so we can actually enter the while loop
 	
-	temp = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	temp = ft_calloc(sizeof(char), (BUFFER_SIZE + 1));
 	if (!temp)
 	{
-		free(temp);
 		return (NULL);
 	}
 	while(!ft_strchr(temp, '\n'))// && byte_count != 0) //while looking for a '\n'
 	{   //check the bytes read, if no error has occured, save the amount of bytes read
-		if (*buffer) // we need to check if temp has content, *temp is the same as temp[0], so if there is no character at temp[0] we skip joining
+		if (*temp) // we need to check if temp has content, *temp is the same as temp[0], so if there is no character at temp[0] we skip joining
 			*buffer = ft_strjoin(*buffer, temp); // concatenate strings
 		// concatenating before reading so previouse stuff can get joined as well
 		byte_count = read(fd, temp, BUFFER_SIZE);
-		// if(ft_strchr(temp, '\n'))
-		// 	break ;
+		if (byte_count <= 0 && (!**buffer))
+		{
+			free(*buffer);
+			return (NULL);
+		}
+		if (!ft_strchr(temp, '\n') && byte_count < BUFFER_SIZE)
+			return (create_last(temp, *buffer));
 		if (byte_count == -1)
 		{
 			// free(byte_count); // you don't free integers lol
@@ -95,14 +109,16 @@ char	*get_next_line(int fd)
 
 	if(!buffer)
 	{
-		buffer = malloc(sizeof(char));
+		buffer = ft_calloc(sizeof(char), 1);
 		buffer[0] = '\0';
 	}
 	if (fd < 0 || BUFFER_SIZE <= 0 || fd > 1024)
 		return (NULL);
 	get_line(&buffer, fd); // read our line for the \n character or any error
 	if (!buffer)
-		return(NULL);
+	{
+		return (NULL);
+	}
 	line = get_read_line(buffer); //return the line that was read
 	buffer = ft_get_rest(buffer); // save all the content that has not yet been read from the fd
 	if (line[0] == '\0')
@@ -121,8 +137,14 @@ int main()
 	printf("check\n");
 	printf("fd: %d\n", fd);
 	
-	printf("first: %s\n", get_next_line(fd));
-	printf("second: %s\n", get_next_line(fd));
-	printf("third: %s\n", get_next_line(fd));
+	char *str1 = get_next_line(fd);
+	printf("first: %s\n", str1);
+	free(str1);
+	char *str2 = get_next_line(fd);
+	printf("second: %s\n", str2);
+	free(str2);
+	char *str3 = get_next_line(fd);
+	printf("third: %s\n", str3);
+	free(str3);
 	
 }
